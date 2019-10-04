@@ -1,4 +1,4 @@
-# Business-Analytics
+# melbourne-housing-prices-prediction
 
 Dear user I hope that the data I uploaded and shared will help you in your work to some extent.
 For everyone familiar to some extent with machine learning (ML) and exploratory data analysis, any further
