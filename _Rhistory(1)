@@ -1,0 +1,512 @@
+grid.draw(vp1)
+g1 <- ggplotGrob(p6)
+g2 <- ggplotGrob(p7)
+vp1 <- rbind(g1, g2, size = "first")
+vp1$widths <- unit.pmax(g1$widths, g2$widths)
+grid.draw(vp1)
+g1 <- ggplotGrob(p6)
+g2 <- ggplotGrob(p7)
+vp1 <- rbind(g1, g2, size = "first")
+vp1$widths <- unit.pmax(g1$widths, g2$widths)
+grid.draw(vp1)
+g3 <- ggplotGrob(p8)
+g4 <- ggplotGrob(p9)
+vp2 <- rbind(g3, g4, size = "first")
+vp2$widths <- unit.pmax(g3$widths, g4$widths)
+grid.newpage()
+grid.draw(vp2)
+g3 <- ggplotGrob(p8)
+g4 <- ggplotGrob(p9)
+vp2 <- rbind(g3, g4)
+vp2$widths <- unit.pmax(g3$widths, g4$widths)
+grid.newpage()
+grid.draw(vp2)
+g1 <- ggplotGrob(p6)
+g2 <- ggplotGrob(p7)
+vp1 <- rbind(g1, g2)
+grid.draw(vp1)
+g3 <- ggplotGrob(p8)
+g4 <- ggplotGrob(p9)
+vp2 <- rbind(g3, g4)
+grid.newpage()
+grid.draw(vp2)
+## Pipe age distribution in the initial pipe network conditions
+pipe_age_0 = 2019 + net.ini$time.construction
+pipe_age = 2019 - pipe_age_0
+p6 <- ggplot(net.ini, aes(pipe_age)) + scale_fill_brewer(palette = "Spectral")
+p6 +  geom_histogram(binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+scale_x_continuous(breaks = seq(from = 0, to = 140, by = 10)) +
+labs(y="Count", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+## Density stacked with histogram count
+p7 <- ggplot(net.ini, aes(x = pipe_age)) + scale_fill_brewer(palette = "Spectral")
+p7  + geom_histogram(aes(y = ..density..),
+binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+geom_density(alpha = 0.1, fill="#FF6666") +
+scale_x_continuous(breaks = seq(from = 0, to = 140, by = 10)) +
+labs(y="Count", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+## Pipe age distribution in final pipe network conditions
+pipe_age_50=(net.final$in.service)
+index = which(pipe_age_50==TRUE)
+s = net.final$time.construction[index]
+in_service = 50 - s
+PLOT2 <- data.frame(in_service)
+p8 <- ggplot(PLOT2, aes(in_service)) + scale_fill_brewer(palette = "Spectral")
+p8 +  geom_histogram(binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+scale_x_continuous(breaks = seq(from = 0, to = 140, by = 10)) +
+labs(y="Count", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+## Density stacked with histogram count
+p9 <- ggplot(PLOT2, aes(x = in_service)) + scale_fill_brewer(palette = "Spectral")
+p9  + geom_histogram(aes(y = ..density..),
+binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+geom_density(alpha = 0.1, fill="#FF6666") +
+scale_x_continuous(breaks = seq(from = 0, to = 140, by = 10)) +
+labs(y="Count", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+## Pipe age distribution in the initial pipe network conditions
+pipe_age_0 = 2019 + net.ini$time.construction
+pipe_age = 2019 - pipe_age_0
+p6 <- ggplot(net.ini, aes(pipe_age)) + scale_fill_brewer(palette = "Spectral")
+p6 +  geom_histogram(binwidth = 10,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+scale_x_continuous(breaks = seq(from = 0, to = 140, by = 10)) +
+labs(y="Count", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+## Density stacked with histogram count
+p7 <- ggplot(net.ini, aes(x = pipe_age)) + scale_fill_brewer(palette = "Spectral")
+p7  + geom_histogram(aes(y = ..density..),
+binwidth = 10,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+geom_density(alpha = 0.1, fill="#FF6666") +
+scale_x_continuous(breaks = seq(from = 0, to = 140, by = 10)) +
+labs(y="Count", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+## Pipe age distribution in final pipe network conditions
+pipe_age_50=(net.final$in.service)
+index = which(pipe_age_50==TRUE)
+s = net.final$time.construction[index]
+in_service = 50 - s
+PLOT2 <- data.frame(in_service)
+p8 <- ggplot(PLOT2, aes(in_service)) + scale_fill_brewer(palette = "Spectral")
+p8 +  geom_histogram(binwidth = 10,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+scale_x_continuous(breaks = seq(from = 0, to = 140, by = 10)) +
+labs(y="Count", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+## Density stacked with histogram count
+p9 <- ggplot(PLOT2, aes(x = in_service)) + scale_fill_brewer(palette = "Spectral")
+p9  + geom_histogram(aes(y = ..density..),
+binwidth = 10,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+geom_density(alpha = 0.1, fill="#FF6666") +
+scale_x_continuous(breaks = seq(from = 0, to = 140, by = 10)) +
+labs(y="Count", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+p8 <- ggplot(PLOT2, aes(in_service)) + scale_fill_brewer(palette = "Spectral")
+p8 +  geom_histogram(binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+scale_x_continuous(breaks = seq(from = 0, to = 150, by = 10)) +
+labs(y="Count", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+## Density stacked with histogram count
+p9 <- ggplot(PLOT2, aes(x = in_service)) + scale_fill_brewer(palette = "Spectral")
+p9  + geom_histogram(aes(y = ..density..),
+binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+geom_density(alpha = 0.1, fill="#FF6666") +
+scale_x_continuous(breaks = seq(from = 0, to = 150, by = 10)) +
+labs(y="Count", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+index = which(pipe_age_50==TRUE)
+length(index)
+## Pipe age distribution in final pipe network conditions
+pipe_age_50=(net.final$in.service)
+index = which(pipe_age_50==TRUE)
+s = net.final$time.construction[index]
+in_service = 50 - s
+PLOT2 <- data.frame(in_service)
+p8 <- ggplot(PLOT2, aes(in_service)) + scale_fill_brewer(palette = "Spectral")
+p8 +  geom_histogram(binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+scale_x_continuous(breaks = seq(from = 0, to = 150, by = 10)) +
+labs(y="Count", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+## Density stacked with histogram count
+p9 <- ggplot(PLOT2, aes(x = in_service)) + scale_fill_brewer(palette = "Spectral")
+p9  + geom_histogram(aes(y = ..density..),
+binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+geom_density(alpha = 0.1, fill="#FF6666") +
+scale_x_continuous(breaks = seq(from = 0, to = 150, by = 10)) +
+labs(y="Count", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+## Pipe age distribution in the initial pipe network conditions
+pipe_age_0 = 2019 + net.ini$time.construction
+pipe_age = 2019 - pipe_age_0
+p6 <- ggplot(net.ini, aes(pipe_age)) + scale_fill_brewer(palette = "Spectral")
+p6 +  geom_histogram(binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+scale_x_continuous(breaks = seq(from = 0, to = 140, by = 10)) +
+labs(y="Count", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+## Density stacked with histogram count
+p7 <- ggplot(net.ini, aes(x = pipe_age)) + scale_fill_brewer(palette = "Spectral")
+p7  + geom_histogram(aes(y = ..density..),
+binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+geom_density(alpha = 0.1, fill="#FF6666") +
+scale_x_continuous(breaks = seq(from = 0, to = 140, by = 10)) +
+labs(y="Count", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+## Pipe age distribution in final pipe network conditions
+pipe_age_50=(net.final$in.service)
+index = which(pipe_age_50==TRUE)
+s = net.final$time.construction[index]
+in_service = 50 - s
+PLOT2 <- data.frame(in_service)
+p8 <- ggplot(PLOT2, aes(in_service)) + scale_fill_brewer(palette = "Spectral")
+p8 +  geom_histogram(binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+scale_x_continuous(breaks = seq(from = 0, to = 140, by = 10)) +
+labs(y="Count", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+## Density stacked with histogram count
+p9 <- ggplot(PLOT2, aes(x = in_service)) + scale_fill_brewer(palette = "Spectral")
+p9  + geom_histogram(aes(y = ..density..),
+binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+geom_density(alpha = 0.1, fill="#FF6666") +
+scale_x_continuous(breaks = seq(from = 0, to = 140, by = 10)) +
+labs(y="Count", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+g1 <- ggplotGrob(p6)
+g2 <- ggplotGrob(p7)
+vp1 <- rbind(g1, g2)
+grid.draw(vp1)
+grid.arrange(p6, p7)
+grid.arrange(p6, p7)
+grid.arrange(p6, p7, ncol = 2)
+pipe_age_0 = 2019 + net.ini$time.construction
+pipe_age = 2019 - pipe_age_0
+p6 <- ggplot(net.ini, aes(pipe_age)) + scale_fill_brewer(palette = "Spectral")
+p6 +  geom_histogram(binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+theme_bw(base_size = 12, base_family = "")
+p7 <- ggplot(net.ini, aes(x = pipe_age)) + scale_fill_brewer(palette = "Spectral")
+p7  + geom_histogram(aes(y = ..density..),
+binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+geom_density(alpha = 0.1, fill="#FF6666") +
+theme_bw(base_size = 12, base_family = "")
+grid.arrange(p6, p7, ncol = 2)
+p6 <- ggplot(net.ini, aes(pipe_age)) + scale_fill_brewer(palette = "Spectral")
+p6 +  geom_histogram(binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+theme_bw(base_size = 12, base_family = "")
+## Density stacked with histogram count
+p7 <- ggplot(net.ini, aes(x = pipe_age)) + scale_fill_brewer(palette = "Spectral")
+p7  + geom_histogram(aes(y = ..density..),
+binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+geom_density(alpha = 0.1, fill="#FF6666") +
+theme_bw(base_size = 12, base_family = "")
+## Stacked-up plot for the pipe age distribution initial & final network
+grid.arrange(p6, p7, ncol = 2)
+p6 <- ggplot(net.ini, aes(pipe_age))
+p6 +  geom_histogram(binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+theme_bw(base_size = 12, base_family = "")
+## Pipe age distribution in the initial pipe network conditions
+pipe_age_0 = 2019 + net.ini$time.construction
+pipe_age = 2019 - pipe_age_0
+p6 <- ggplot(net.ini, aes(pipe_age))
+p6 +  geom_histogram(binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+theme_bw(base_size = 12, base_family = "")
+## Density stacked with histogram count
+p7 <- ggplot(net.ini, aes(x = pipe_age))
+p7  + geom_histogram(aes(y = ..density..),
+binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+geom_density(alpha = 0.1, fill="#FF6666") +
+theme_bw(base_size = 12, base_family = "")
+## Stacked-up plot for the pipe age distribution initial & final network
+grid.arrange(p6, p7, ncol = 2)
+p6 <- ggplot(net.ini, aes(pipe_age))
+p6 +  geom_histogram(binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey")
+## Density stacked with histogram count
+p7 <- ggplot(net.ini, aes(x = pipe_age))
+p7  + geom_histogram(aes(y = ..density..),
+binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+geom_density(alpha = 0.1, fill="#FF6666")
+p6 <- ggplot(net.ini, aes(pipe_age))
+p6 +  geom_histogram(binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey")
+## Density stacked with histogram count
+p7 <- ggplot(net.ini, aes(x = pipe_age))
+p7  + geom_histogram(aes(y = ..density..),
+binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+geom_density(alpha = 0.1, fill="#FF6666")
+## Stacked-up plot for the pipe age distribution initial & final network
+grid.arrange(p6, p7, ncol = 2)
+pipe_age_0 = 2019 + net.ini$time.construction
+pipe_age = 2019 - pipe_age_0
+p6 <- ggplot(net.ini, aes(pipe_age))
+p6 +  geom_histogram(binwidth = 1)
+## Density stacked with histogram count
+p7 <- ggplot(net.ini, aes(x = pipe_age))
+p7  + geom_histogram(aes(y = ..density..),
+binwidth = 1) +
+geom_density(alpha = 0.1, fill="#FF6666")
+grid.arrange(p6, p7, ncol = 2)
+pipe_age_0 = 2019 + net.ini$time.construction
+pipe_age = 2019 - pipe_age_0
+p6 <- ggplot(net.ini, aes(pipe_age)) + scale_fill_brewer(palette = "Spectral")
+p6 +  geom_histogram(binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey")) +
+theme_bw(base_size = 12, base_family = "")
+## Density stacked with histogram count
+p7 <- ggplot(net.ini, aes(x = pipe_age)) + scale_fill_brewer(palette = "Spectral")
+p7  + geom_histogram(aes(y = ..density..),
+binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+geom_density(alpha = 0.1, fill="#FF6666") +
+scale_x_continuous(breaks = seq(from = 0, to = 140, by = 10)) +
+labs(y="Count", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+grid.arrange(p6, p7, ncol = 2)
+p7 <- ggplot(net.ini, aes(x = pipe_age)) + scale_fill_brewer(palette = "Spectral")
+p7  + geom_histogram(aes(y = ..density..))
+pipe_age_0 = 2019 + net.ini$time.construction
+pipe_age = 2019 - pipe_age_0
+p6 <- ggplot(net.ini, aes(pipe_age))
+p6 +  geom_histogram()
+## Density stacked with histogram count
+p7 <- ggplot(net.ini, aes(x = pipe_age))
+p7  + geom_histogram(aes(y = ..density..))
+grid.arrange(p6, p7, ncol = 2)
+p7 <- ggplot(net.ini, aes(x = pipe_age))
+p7  + geom_histogram(aes(y = ..density..))
+p6 <- ggplot(net.ini, aes(pipe_age))
+p6 +  geom_histogram(binwidth = 1
+p6 <- ggplot(net.ini, aes(pipe_age))
+p6 +  geom_histogram(binwidth = 1)
+## Density stacked with histogram count
+p7 <- ggplot(net.final, aes(in_service))
+p7  + geom_histogram(binwidth = 1)
+p7 <- ggplot(PLOT2, aes(in_service))
+p7  + geom_histogram(binwidth = 1)
+p6 <- ggplot(net.ini, aes(pipe_age))
+p6 +  geom_histogram(binwidth = 1)
+## Density stacked with histogram count
+p7 <- ggplot(PLOT2, aes(in_service))
+p7  + geom_histogram(binwidth = 1)
+p6 <- ggplot(net.ini, aes(pipe_age))
+p6 +  geom_histogram(binwidth = 1)
+## Density stacked with histogram count
+p7 <- ggplot(PLOT2, aes(in_service))
+p7  + geom_histogram(binwidth = 1)
+grid.arrange(p6, p7, ncol = 2)
+pipe_age_0 = 2019 + net.ini$time.construction
+pipe_age = 2019 - pipe_age_0
+p6 <- ggplot(net.ini, aes(pipe_age))
+p6 +  geom_histogram(binwidth = 1)
+## Density stacked with histogram count
+p7 <- ggplot(PLOT2, aes(in_service))
+p7  + geom_histogram(binwidth = 1)
+grid.arrange(p6, p7, ncol = 2)
+## Pipe age distribution in the initial pipe network conditions
+pipe_age_0 = 2019 + net.ini$time.construction
+pipe_age = 2019 - pipe_age_0
+p6 <- ggplot(net.ini, aes(pipe_age))
+p6 +  geom_histogram(binwidth = 1)
+## Density stacked with histogram count
+p7 <- ggplot(PLOT2, aes(in_service))
+p7  + geom_histogram(binwidth = 1)
+grid.arrange(p6, p7, ncol = 2)
+dev.off()
+## Pipe age distribution in the initial pipe network conditions
+pipe_age_0 = 2019 + net.ini$time.construction
+pipe_age = 2019 - pipe_age_0
+p6 <- ggplot(net.ini, aes(pipe_age))
+p6 +  geom_histogram(binwidth = 1)
+## Density stacked with histogram count
+p7 <- ggplot(PLOT2, aes(in_service))
+p7  + geom_histogram(binwidth = 1)
+grid.arrange(p6, p7, ncol = 2)
+p6 <- ggplot(net.ini, aes(pipe_age))
+p6 +  geom_histogram(binwidth = 1)
+## Density stacked with histogram count
+p7 <- ggplot(PLOT2, aes(in_service))
+p7  + geom_histogram(binwidth = 1)
+p6 <- ggplot(net.ini, aes(x = pipe_age))
+p6 +  geom_histogram(binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+scale_x_continuous(breaks = seq(from = 0, to = 140, by = 10)) +
+labs(y="Count", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+## Density stacked with histogram count
+p7 <- ggplot(net.ini, aes(x = pipe_age))
+p7  + geom_histogram(aes(y = ..density..),
+binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+geom_density(alpha = 0.1, fill="#FF6666") +
+scale_x_continuous(breaks = seq(from = 0, to = 140, by = 10)) +
+labs(y="Count", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+## Pipe age distribution in final pipe network conditions
+pipe_age_50=(net.final$in.service)
+index = which(pipe_age_50==TRUE)
+s = net.final$time.construction[index]
+in_service = 50 - s
+PLOT2 <- data.frame(in_service)
+p8 <- ggplot(PLOT2, aes(in_service)) + scale_fill_brewer(palette = "Spectral")
+p8 +  geom_histogram(binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+scale_x_continuous(breaks = seq(from = 0, to = 140, by = 10)) +
+labs(y="Count", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+## Density stacked with histogram count
+p9 <- ggplot(PLOT2, aes(x = in_service)) + scale_fill_brewer(palette = "Spectral")
+p9  + geom_histogram(aes(y = ..density..),
+binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+geom_density(alpha = 0.1, fill="#FF6666") +
+scale_x_continuous(breaks = seq(from = 0, to = 140, by = 10)) +
+labs(y="Count", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+grid.arrange(p6, p7)
+require(cowplot)
+install.packages("cowplot")
+library(cowplot)
+plot_grid(p6, p7, labels = c('a)', 'b)'))
+library(gtable)
+gl = lapply(list(p6,p7), ggplotGrob)
+g = do.call(rbind, c(gl, size="first"))
+g$widths = do.call(unit.pmax, lapply(gl, "[[", "widths"))
+grid.newpage()
+grid.draw(g)
+## Pipe age distribution in the initial pipe network conditions
+pipe_age_0 = 2019 + net.ini$time.construction
+pipe_age = 2019 - pipe_age_0
+p6 <- ggplot(net.ini, aes(x = pipe_age))
+p6 +  geom_histogram(binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+scale_x_continuous(breaks = seq(from = 0, to = 140, by = 10)) +
+labs(y="Count", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+## Density stacked with histogram count
+p7 <- ggplot(net.ini, aes(x = pipe_age))
+p7  + geom_histogram(aes(y = ..density..),
+binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+geom_density(alpha = 0.1, fill="#FF6666") +
+scale_x_continuous(breaks = seq(from = 0, to = 140, by = 10)) +
+labs(y="Density", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+## Pipe age distribution in final pipe network conditions
+pipe_age_50=(net.final$in.service)
+index = which(pipe_age_50==TRUE)
+s = net.final$time.construction[index]
+in_service = 50 - s
+PLOT2 <- data.frame(in_service)
+p8 <- ggplot(PLOT2, aes(in_service)) + scale_fill_brewer(palette = "Spectral")
+p8 +  geom_histogram(binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+scale_x_continuous(breaks = seq(from = 0, to = 140, by = 10)) +
+labs(y="Count", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+## Density stacked with histogram count
+p9 <- ggplot(PLOT2, aes(x = in_service)) + scale_fill_brewer(palette = "Spectral")
+p9  + geom_histogram(aes(y = ..density..),
+binwidth = 1,
+col="black",
+size=0.1,
+fill = "lightgrey") +
+geom_density(alpha = 0.1, fill="#FF6666") +
+scale_x_continuous(breaks = seq(from = 0, to = 140, by = 10)) +
+labs(y="Density", x="Age [Years]") +
+theme_bw(base_size = 12, base_family = "")
+grid.arrange(p8, p9)
+grid.arrange(p1, p2)
