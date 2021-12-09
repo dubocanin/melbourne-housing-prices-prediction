@@ -15,4 +15,4 @@ here are some, hopefully, useful instructions on how to use the code and data pr
 6) The R-Studio is used for coding with R, due to its user friendliness, especially for beginners.
 7) Have a good time and let me know if you are facing any problems.
 
-Cheers! d(^.^)b
+Best!
