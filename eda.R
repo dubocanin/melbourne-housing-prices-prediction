@@ -1,13 +1,13 @@
-# ETH Zürich
+# ETH ZÃ¼rich
 # Chair of Management Information Systems
 # Department of Management, Technology and Economics
 # Business Analytics Project in Machine Learning
 # Applying analytic methods to the predictive modelling of housing prices in
 # Melbourne
-# Nebojsa Dubocanin*, Jan Eric Bühlmann**, Pauline Offeringa***
-# *Dept. of Civil, Environmental and Geomatic Engineering, ETH Zürich, dunebojs@student.ethz.ch
-# **Dept. of Business, Economics and Informatics, UZH Zürich, janeric.buehlmann@uzh.ch
-# ***Dept. of Materials Sciences, ETH Zürich, paulineo@student.ethz.ch
+# Nebojsa Dubocanin*, Jan Eric BÃ¼hlmann**, Pauline Offeringa***
+# *Dept. of Civil, Environmental and Geomatic Engineering, ETH ZÃ¼rich, dunebojs@student.ethz.ch
+# **Dept. of Business, Economics and Informatics, UZH ZÃ¼rich, janeric.buehlmann@uzh.ch
+# ***Dept. of Materials Sciences, ETH ZÃ¼rich, paulineo@student.ethz.ch
 # June 18, 2019
 
 # Loading necessary libraries (libraries suggested by the professor Stefan Feuerriegel)
@@ -101,7 +101,7 @@ kurtosis(price)
 ## Plot the "Regionname" vs "Price" to get an insight into the price distributon for specific region
 
 p2 <- ggplot(df1, aes(x = `Regionname`)) 
-p2 +  geom_violin(aes(y = `Price`), fill="lightblue", draw_quantiles = TRUE, scale = "width") +
+p2 +  geom_violin(aes(y = `Price`), scale = 'width') +
       labs(y="Price (Mil. $)", x="Region (-)") +
       theme_bw(base_size = 14) +
       theme(panel.grid.major.x = element_blank(),
@@ -114,9 +114,9 @@ p2 +  geom_violin(aes(y = `Price`), fill="lightblue", draw_quantiles = TRUE, sca
 ggsave("C:/melbourne/Plots/eda/price_region.png")
 
 ## Property Count by "Type" and "Price" variables
-p3 <- ggplot(df1, aes(as.numeric(as.character(Propertycount)), Price))
-p3 +  geom_point(aes(colour=Type)) +
-      labs(y="Price (Mil. $)", x="Property Count (-)") +
+p3 <- ggplot(df1, aes(Type))
+p3 +  geom_violin(aes(y=`Price`)) +
+      labs(y="Price (Mil. $)", x="Property Type (-)") +
       theme_bw(base_size = 14) +
       theme(legend.position = "right",
             panel.grid.major.x = element_blank(),
@@ -232,7 +232,7 @@ p6 +  geom_point(aes(colour = `Price`)) +
       scale_colour_gradient(low='#ffe9ad',
                              high='#ff0000') +
       theme_bw(base_size = 14) + 
-      labs(y="Latitude (°)", x="Longitude (°)", color = "Price (Mil. $)") +
+      labs(y="Latitude (Â°)", x="Longitude (Â°)", color = "Price (Mil. $)") +
       theme_bw(base_size = 14) +
       theme(panel.grid.major.x = element_blank(),
         panel.grid.major.y = element_blank(),
@@ -294,8 +294,8 @@ Date = df1$Date
 Price = df1$Price
 p9df  <- data.frame(Date, Price)
 
-p9 <- ggplot(p9df, aes(order(as.Date(Date, format="%d/%m/%Y")), `Price`))
-p9 +  geom_point(aes(colour=as.numeric(as.character(Price))), alpha=0.8) +
+p9 <- ggplot(p9df, aes(order(as.Date(Date)), `Price`))
+p9 +  geom_point(aes(colour=Price), alpha=0.8) +
       scale_colour_gradient(low='#ffe9ad',
                             high='#ff0000') +
       labs(y="Price (Mil. $)", x="Date (-)", color = "Price (Mil. $)") +
@@ -312,7 +312,7 @@ ggsave("C:/melbourne/Plots/eda/price_date.png")
 
 ## Removing unnecessary columns(variables) from dataset df1
 ## YearBuilt is not removed from the dataset because it is necessary for the plot 8
-df1 <- subset( df1, select = -c( Bedroom2, Suburb, Address, Postcode, Method, Date, SellerG) )
+df1 <- subset( df1, select = -c( Bedroom2, Address, Postcode, Method, Date, SellerG) )
 
 ## Export csv file. Set filename & location (in the current working directory) with input file="...".
 write.table(df1, file="clean_dataframe.csv", sep = ",", row.names = F)
