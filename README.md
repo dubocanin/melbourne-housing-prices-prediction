@@ -5,7 +5,7 @@ Dear User,
 I hope the data provided here will help you in your work to some extent.
 For everyone familiar with machine learning (ML) and exploratory data analysis, any further 
 instructions are probably not necessary. However, for all those that are just stepping into the ML field,
-here are instructions on how to use the code and data provided.
+here are instructions on how to use the code and data provided:
 
 1) All datasets are stored in the "Data" folder...untouched data set and a cleaned one (it is good to have both of them for the comparison)
 2) All plots generated for the purpose of the project are stored in the "Plots" folder
