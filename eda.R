@@ -4,111 +4,70 @@
 # Business Analytics Project in Machine Learning
 # Applying analytic methods to the predictive modelling of housing prices in
 # Melbourne
-# Nebojša Duboèanin*, Jan Eric Bühlmann**, Pauline Offeringa***
+# Nebojsa Dubocanin*, Jan Eric Bühlmann**, Pauline Offeringa***
 # *Dept. of Civil, Environmental and Geomatic Engineering, ETH Zürich, dunebojs@student.ethz.ch
 # **Dept. of Business, Economics and Informatics, UZH Zürich, janeric.buehlmann@uzh.ch
 # ***Dept. of Materials Sciences, ETH Zürich, paulineo@student.ethz.ch
 # June 18, 2019
 
-## Loading necessary libraries (libraries suggested by the professor Stefan Feuerriegel)
+# Loading necessary libraries (libraries suggested by the professor Stefan Feuerriegel)
+library(ggplot2)
+library(e1071)
+library(corrplot)
 
-for(i in c(1:1)){
-  library(knitr)
-  library(tidyverse)
-  library(caret)
-  library(e1071)
-  library(ggplot2)
-  library(forcats)
-  library(dplyr)
-  library(lmtest)
-  library(car)
-  library(pROC)
-  library(arules)
-  library(arulesViz)
-  library(ElemStatLearn)
-  library(ISLR)
-  library(glmnet)
-  library(gam)
-  library(class)
-  library(nnet)
-  library(rpart)
-  library(party)
-  library(partykit)
-  library(randomForest)
-  library(ROCR)
-  library(boot)
-  library(bayesboot)
-  library(mboost)
-  library(ada)
-  library(MDPtoolbox)
-  library(tm)
-  library(SnowballC)
-  library(ggmap)
-  library(plyr)
-  library(ggthemes)
-  library(reshape)
-  library(nycflights13)
-  library(kohonen)
-  library(corrplot)
-  library(tidyr)
-}
+# Defining the working directory
+setwd("C:/melbourne/Data")
 
-## Defining the working directory
-setwd("C:/Users/nebapy/Desktop/ETHZ/2_Semester/06_Business_Analytics/PROJECT/Data")
+# Loading "Melbourne Housing Dataset"
+df <- read.csv("melbourne_housing_FULL.csv")
 
-## Loading "Melbourne Housing Dataset"
-df <- read.csv("melbourne_housing_full.csv")
+# Converting all "#N/A" values within df dataframe into NA values
+Regionname = c(sapply(df$Regionname, function(x){gsub("#N/A", NA, x)}))
+Propertycount = c(sapply(df$Propertycount, function(x){gsub("#N/A", NA, x)}))
+Postcode = c(sapply(df$Postcode, function(x) {gsub("#N/A", NA, x)}))
+CouncilArea = c(sapply(df$CouncilArea, function(x) {gsub("#N/A", NA, x)}))
+Distance = c(sapply(df$Distance, function(x) {gsub("#N/A", NA, x)}))
 
-## Converting all "#N/A" values within df dataframe into NA values
-## It is done column by column since if function bellow is applied to the whole data frame
-## integers would be converted into other variable type 
-## making it unusefull in the later analysis
-Regionname = c(sapply(df$Regionname, function(x) { gsub("#N/A", NA, x) } ) )
-Propertycount = c(sapply(df$Propertycount, function(x) { gsub("#N/A", NA, x) } ) )
-Postcode = c(sapply(df$Postcode, function(x) { gsub("#N/A", NA, x) } ) )
-CouncilArea = c(sapply(df$CouncilArea, function(x) { gsub("#N/A", NA, x) } ) )
-Distance = c(sapply(df$Distance, function(x) { gsub("#N/A", NA, x) } ) )
-
-## Now we will overwrite df dataset with "#N/A" changed to N.A.
+# Now we will overwrite df dataset with "#N/A" changed to N.A.
 df$Regionname <- Regionname
 df$Propertycount <- Propertycount
 df$Postcode <- Postcode
 df$CouncilArea <- CouncilArea
 df$Distance <- Distance
 
-## Names of the columns we are working with [21 column in total]
+# Names of the columns we are working with [21 column in total]
 colnames(df)
 
-## Short Data Summary
+# Short Data Summary
 str(df)
 head(df)
 
-## Statistical Summary
+# Statistical Summary
 stat = summary(df)
 print(stat)
 
-## Variable of interest, variable to predict "PRICE"
+# Variable of interest, variable to predict "PRICE"
 sum(is.na(df$Price)) # tell us how many N.A. values are inside the column "Price"
 
-## Removing rows with N.A. values from column "Price"
-## By examining the dataset, one price is very high 11'200'000.00
-## This one will be removed and also the house that costs 9'000'000.00
-## Since it costs too much and has way smaller building area than houses of similar price
-df1 <- df[-which(is.na(df$Price)), ]
+# Removing rows with N.A. values from column "Price"
+# By examining the dataset, one price is very high 11'200'000.00
+# This one will be removed and also the house that costs 9'000'000.00
+# Since it costs too much and has way smaller building area than houses of similar price
+df1 <- df[-which(is.na(df$Price)),]
 price = df1$Price
 a = c(1:2)
 for (i in a) {
   df1 <- df1[-c(which.max(df1[,"Price"])),]
 }
-## Printing number of missing values for each variable 
-## this part is done using the code from the following webpage
-## (https://www.kaggle.com/sugh93/analysis-of-melbourne-housing-data)
+# Printing number of missing values for each variable
+# this part is done using the code from the following webpage
+# (https://www.kaggle.com/sugh93/analysis-of-melbourne-housing-data)
 print("Number of missing values in each feature")
 knitr::kable(sapply(df1, function(x) sum(is.na(x))))
 
-## After the summary it can be observed that variables:
-## "Distance", "Postcode", "CouncilArea", "Regionname" and "Propertycount"
-## have least number of NA values, therefore those will be removed
+# After the summary it can be observed that variables:
+# "Distance", "Postcode", "CouncilArea", "Regionname" and "Propertycount"
+# have least number of NA values, therefore corresponding rows are removed
 
 df1 <- subset(df1, !is.na(df1$Regionname))
 df1 <- subset(df1, !is.na(df1$Propertycount))
@@ -116,67 +75,54 @@ df1 <- subset(df1, !is.na(df1$Postcode))
 df1 <- subset(df1, !is.na(df1$Distance))
 df1 <- subset(df1, !is.na(df1$CouncilArea))
 
-## Plot for the frequency distribution for the variable "Price"
-p1 <- ggplot(df1, aes(x = df1$Price))      # Here dataframe df_f is used since "Price" variable
-p1 +  geom_histogram(binwidth = 100000, # do not have any N.A. values
+## Plot showing the frequency distribution for the variable "Price"
+p1 <- ggplot(df1, aes(x = `Price`))      # Here dataframe df_f is used since "Price" variable
+p1 +  geom_histogram(binwidth = 100000,  # do not have any N.A. values
                      col="black",
                      size=0.1,
                      fill = "lightgrey") +
   scale_x_continuous(breaks = c(1000000, 2000000, 3000000, 4000000, 5000000),
                      labels = c("1", "2", "3", "4", "5")) +
-  labs(y="Count", x="Price [Millions of $]") +
-  theme_bw(base_size = 14, base_family = "serif") +
-  theme(legend.position = "bottom",
-        legend.title = element_blank(),
-        panel.grid.major.x = element_blank(),
-        panel.grid.major.y = element_line(),
+  labs(y="Count (-)", x="Price (Mil. $)") +
+  theme_bw(base_size = 14) +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_blank(),
         panel.grid.minor.x = element_blank(),
-        panel.grid.minor.y = element_line(),
-        # Remove panel background
-        panel.background = element_blank(),
-        legend.spacing.x = unit(5, "mm"),
-        panel.border = element_rect(colour = "black", fill=NA),
-        legend.background = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        # Remove panel background,
         axis.text.x = element_text(size = 14),
-        axis.text.y = element_text(size = 14),
-        legend.text = element_text(size = 14)) +
-        guides(colour = guide_legend(override.aes = list(size=4)))
+        axis.text.y = element_text(size = 14))
+ggsave("C:/melbourne/Plots/eda/price_distribution.png")
 
+# additional statistical parameters
 skewness(price)
 kurtosis(price)
 
 ## Plot the "Regionname" vs "Price" to get an insight into the price distributon for specific region
 
-p2 <- ggplot(df1, aes(x = df1$Regionname)) 
-p2 +  geom_violin(aes(y = df1$Price), fill="lightblue", draw_quantiles = TRUE, scale = "width") +
-      labs(y="Price", x="Region") +
-      theme_bw(base_size = 14, base_family = "serif") +
-      theme(legend.position = "bottom",
-            legend.title = element_blank(),
-            panel.grid.major.x = element_blank(),
-            panel.grid.major.y = element_line(),
+p2 <- ggplot(df1, aes(x = `Regionname`)) 
+p2 +  geom_violin(aes(y = `Price`), fill="lightblue", draw_quantiles = TRUE, scale = "width") +
+      labs(y="Price (Mil. $)", x="Region (-)") +
+      theme_bw(base_size = 14) +
+      theme(panel.grid.major.x = element_blank(),
+            panel.grid.major.y = element_blank(),
             panel.grid.minor.x = element_blank(),
-            panel.grid.minor.y = element_line(),
-            # Remove panel background
-            panel.background = element_blank(),
-            legend.spacing.x = unit(5, "mm"),
-            panel.border = element_rect(colour = "black", fill=NA),
-            legend.background = element_blank(),
-            axis.text.x = element_text(size = 14, angle = 45, hjust = 1),
-            axis.text.y = element_text(size = 14),
-            legend.text = element_text(size = 14)) +
-      guides(colour = guide_legend(override.aes = list(size=4)))
+            panel.grid.minor.y = element_blank(),
+            # Resize tick labels
+            axis.text.x = element_text(size = 14, angle = 30, hjust = 0.9),
+            axis.text.y = element_text(size = 14))
+ggsave("C:/melbourne/Plots/eda/price_region.png")
 
 ## Property Count by "Type" and "Price" variables
-p3 <- ggplot(df1, aes(x=as.numeric(as.character(Propertycount)), y=Price))
+p3 <- ggplot(df1, aes(as.numeric(as.character(Propertycount)), Price))
 p3 +  geom_point(aes(colour=Type)) +
-      labs(y="Price", x="Property Count") +
-      theme_bw(base_size = 14, base_family = "serif") +
+      labs(y="Price (Mil. $)", x="Property Count (-)") +
+      theme_bw(base_size = 14) +
       theme(legend.position = "right",
             panel.grid.major.x = element_blank(),
-            panel.grid.major.y = element_line(),
+            panel.grid.major.y = element_blank(),
             panel.grid.minor.x = element_blank(),
-            panel.grid.minor.y = element_line(),
+            panel.grid.minor.y = element_blank(),
             # Remove panel background
             panel.background = element_blank(),
             legend.spacing.x = unit(5, "mm"),
@@ -186,6 +132,7 @@ p3 +  geom_point(aes(colour=Type)) +
             axis.text.y = element_text(size = 14),
             legend.text = element_text(size = 14)) +
       guides(colour = guide_legend(override.aes = list(size=4)))
+ggsave("C:/melbourne/Plots/eda/type_price.png")
 
 # Loop for removing 50 highest "Landsize" values (outliers)
 a = c(1:25)
@@ -242,77 +189,75 @@ df1$YearBuilt[is.na(df1$YearBuilt )] <- filler4
 print("Number of missing values in each feature")
 knitr::kable(sapply(df1, function(x) sum(is.na(x))))
 
-# Plot of distance with Landsize
+# Plot of Price vs Distance
 df1$Distance = as.numeric(as.character(df1$Distance))
 
-p4 <- ggplot(df1, aes(x=df1$Distance))
-p4 +  geom_point(aes(y = df1$Price, colour=as.numeric(as.character(df1$Price))), alpha=0.8) +
+p4 <- ggplot(df1, aes(`Distance`, `Price`))
+p4 +  geom_point(colour='lightblue') +
       scale_colour_gradient(low = "lightblue", high = "red") +
-      labs(y="Price", x="Distance", color = "Price") +
-      theme_bw(base_size = 14, base_family = "serif") +
-      theme(legend.position = "right",
-            panel.grid.major.x = element_blank(),
-            panel.grid.major.y = element_line(),
+      labs(y="Price (Mil. $)", x="Distance (km)") +
+      theme_bw(base_size = 14) +
+      theme(panel.grid.major.x = element_blank(),
+            panel.grid.major.y = element_blank(),
             panel.grid.minor.x = element_blank(),
-            panel.grid.minor.y = element_line(),
+            panel.grid.minor.y = element_blank(),
             # Remove panel background
-            panel.background = element_blank(),
-            legend.spacing.x = unit(5, "mm"),
-            panel.border = element_rect(colour = "black", fill=NA),
-            legend.background = element_blank(),
             axis.text.x = element_text(size = 14),
-            axis.text.y = element_text(size = 14),
-            legend.text = element_text(size = 14)) +
-      guides(colour = guide_legend(override.aes = list(size=4)))
-    
+            axis.text.y = element_text(size = 14))
+ggsave("C:/melbourne/Plots/eda/price_distance.png") 
+   
 ## Plotting the relation between "Landsize" and "Price"   
-p5 <- ggplot(df1, aes(x=log(df1$Landsize)))
-p5 +  geom_point(aes(y = df1$Price, colour=as.numeric(as.character(df1$Price))), alpha=0.8) +
-      scale_colour_gradient(low = "lightblue", high = "red") +
-      theme_bw(base_size = 14, base_family = "serif") + 
-      labs(y="Price", x="Landsize", color = "Price") +
-      theme(legend.position = "right",
-            legend.title = element_text(),
-            panel.grid.major.x = element_blank(),
-            panel.grid.major.y = element_line(),
+p5 <- ggplot(df1, aes(`Landsize`, `Price`))
+p5 +  geom_point(aes(colour = Regionname)) +
+      scale_colour_brewer(palette = "Set2") +
+      labs(x = expression ('Land Size' ~(m^2)), y = 'Price (Mil. $)', colour = 'Region Name (-)') +
+      theme_bw(base_size = 14) +
+      theme(panel.grid.major.x = element_blank(),
+            panel.grid.major.y = element_blank(),
             panel.grid.minor.x = element_blank(),
-            panel.grid.minor.y = element_line(),
-            # Remove panel background
+            panel.grid.minor.y = element_blank(),
             panel.background = element_blank(),
-            legend.spacing.x = unit(5, "mm"),
-            panel.border = element_rect(colour = "black", fill=NA),
-            legend.background = element_blank(),
             axis.text.x = element_text(size = 14),
-            axis.text.y = element_text(size = 14),
-            legend.text = element_text(size = 14)) +
-      guides(colour = guide_legend(override.aes = list(size=4)))
+            axis.text.y = element_text(size = 14))
+ggsave("C:/melbourne/Plots/eda/price_landsize.png")
 
 ## Ploting the relationship between "Property Location" and "Price"
 df1 <- subset(df1, !is.na(df1$Lattitude)) # Since the variables are connected, 
                                           # when, N.As are removed from Latitude
                                           # they are also removed from Longitude
 
-p6 <- ggplot(df1, aes(y = as.numeric(as.character(df1$Lattitude)),
-                      x = as.numeric(as.character(df1$Longtitude))))
-p6 +  geom_point(aes(colour = as.numeric(as.character(df1$Price)))) +
-      scale_colour_gradient(low = "lightblue", high = "red") +
-      theme_bw(base_size = 14, base_family = "serif") + 
-      labs(y="Latitude", x="Longitude", color = "Price")
+p6 <- ggplot(df1, aes(y = as.numeric(as.character(`Lattitude`)),
+                      x = as.numeric(as.character(`Longtitude`))))
+p6 +  geom_point(aes(colour = `Price`)) +
+      scale_colour_gradient(low='#ffe9ad',
+                             high='#ff0000') +
+      theme_bw(base_size = 14) + 
+      labs(y="Latitude (°)", x="Longitude (°)", color = "Price (Mil. $)") +
+      theme_bw(base_size = 14) +
+      theme(panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.background = element_blank(),
+        axis.text.x = element_text(size = 14),
+        axis.text.y = element_text(size = 14))
+ggsave("C:/melbourne/Plots/eda/price_location.png")
 
 ## Plotting "Property Count"  vs "Region"
 
-p7 <- ggplot(df1, y = df1$Propertycount)
-p7 +  geom_bar(aes(x = df1$Regionname, fill = df1$Type)) +
-      theme_bw(base_size = 14, base_family = "serif") + 
-      labs(y="Count", x="Region Name", fill = "Type") +
+p7 <- ggplot(df1, y = `Propertycount`)
+p7 +  geom_bar(aes(x = `Regionname`, fill = `Type`)) +
+      theme_bw(base_size = 14) + 
+      labs(y="Count (-)", x="Region Name (-)", fill = "Type") +
       theme(panel.grid.major.x = element_blank(),
-            panel.grid.major.y = element_line(),
+            panel.grid.major.y = element_blank(),
             panel.grid.minor.x = element_blank(),
-            panel.grid.minor.y = element_line(),
+            panel.grid.minor.y = element_blank(),
             # Remove panel background
             panel.background = element_blank(),
-            axis.text.x = element_text(size = 14, angle = 45, hjust = 1),
+            axis.text.x = element_text(size = 14, angle = 30, hjust=0.9),
             axis.text.y = element_text(size = 14))
+ggsave("C:/melbourne/Plots/eda/region_property.png")
       
 ## Ploting the Correlation among the variables
 ## First we need to clean df_f from all N.A. values othervise we can't do a correlogram
@@ -323,60 +268,50 @@ df_cor = dplyr::select_if(dfc, is.numeric)
 CORR <- cor(df_cor)
 corrplot(CORR, method="number")
 
+
 ## Ploting Price Distribution against Year Built
 
-p8 <- ggplot(df1, aes(x=df1$YearBuilt))
-p8 +  geom_point(aes(y = df1$Price, colour=as.numeric(as.character(df1$Price))), alpha=0.8) +
-  scale_colour_gradient(low = "lightblue", high = "red") +
-  labs(y="Price", x="Year Built", color = "Price") +
-  theme_bw(base_size = 14, base_family = "serif") +
-  scale_x_continuous(breaks = seq(from = 1800, to = 2020, by = 50)) +
-  theme(legend.position = "right",
-        panel.grid.major.x = element_blank(),
-        panel.grid.major.y = element_line(),
+p8 <- ggplot(df1, aes(`YearBuilt`, `Price`))
+p8 +  geom_point(colour='lightblue') +
+  scale_colour_gradient() +
+  labs(x="Year Built (-)", y="Price (Mil. $)", color = "Price (Mil. $)") +
+  theme_bw(base_size = 14) +
+  scale_x_continuous(breaks = seq(from = 1800, to = 2020, by = 25)) +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_blank(),
         panel.grid.minor.x = element_blank(),
-        panel.grid.minor.y = element_line(),
+        panel.grid.minor.y = element_blank(),
         # Remove panel background
         panel.background = element_blank(),
-        legend.spacing.x = unit(5, "mm"),
-        panel.border = element_rect(colour = "black", fill=NA),
-        legend.background = element_blank(),
         axis.text.x = element_text(size = 14),
-        axis.text.y = element_text(size = 14),
-        legend.text = element_text(size = 14)) +
-  guides(colour = guide_legend(override.aes = list(size=4)))
+        axis.text.y = element_text(size = 14))
+ggsave("C:/melbourne/Plots/eda/price_yearbuilt.png")
 
 ## DATE vs Price variables relationship
 ## Sorting Date variable from oldest to newest
 df1 <- df1[order(as.Date(df1$Date, format="%d/%m/%Y")),]
-Date11 = df1$Date
+Date = df1$Date
 Price = df1$Price
-PLOT111  <- data.frame(Date11, Price)
+p9df  <- data.frame(Date, Price)
 
-p9 <- ggplot(PLOT111, aes(x=order(as.Date(Date11, format="%d/%m/%Y"))))
-p9 +  geom_point(aes(y = Price, colour=as.numeric(as.character(Price))), alpha=0.8) +
-      scale_colour_gradient(low = "lightblue", high = "red") +
-      labs(y="Price", x="Date", color = "Price") +
-      theme_bw(base_size = 14, base_family = "serif") +
-      theme(legend.position = "right",
-            panel.grid.major.x = element_blank(),
-            panel.grid.major.y = element_line(),
+p9 <- ggplot(p9df, aes(order(as.Date(Date, format="%d/%m/%Y")), `Price`))
+p9 +  geom_point(aes(colour=as.numeric(as.character(Price))), alpha=0.8) +
+      scale_colour_gradient(low='#ffe9ad',
+                            high='#ff0000') +
+      labs(y="Price (Mil. $)", x="Date (-)", color = "Price (Mil. $)") +
+      theme_bw(base_size = 14) +
+      theme(panel.grid.major.x = element_blank(),
+            panel.grid.major.y = element_blank(),
             panel.grid.minor.x = element_blank(),
-            panel.grid.minor.y = element_line(),
-            # Remove panel background
+            panel.grid.minor.y = element_blank(),
             panel.background = element_blank(),
-            legend.spacing.x = unit(5, "mm"),
-            panel.border = element_rect(colour = "black", fill=NA),
-            legend.background = element_blank(),
             axis.text.x = element_text(size = 14),
-            axis.text.y = element_text(size = 14),
-            legend.text = element_text(size = 14)) +
-      guides(colour = guide_legend(override.aes = list(size=4)))
-
+            axis.text.y = element_text(size = 14))
+ggsave("C:/melbourne/Plots/eda/price_date.png")
 
 
 ## Removing unnecessary columns(variables) from dataset df1
-## YearBuilt is not removed from the dataset since it was necessary for a plot 8
+## YearBuilt is not removed from the dataset because it is necessary for the plot 8
 df1 <- subset( df1, select = -c( Bedroom2, Suburb, Address, Postcode, Method, Date, SellerG) )
 
 ## Export csv file. Set filename & location (in the current working directory) with input file="...".

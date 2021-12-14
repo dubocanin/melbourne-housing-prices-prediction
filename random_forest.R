@@ -4,56 +4,18 @@
 # Business Analytics Project in Machine Learning
 # Applying analytic methods to the predictive modelling of housing prices in
 # Melbourne
-# Nebojša Duboèanin*, Jan Eric Bühlmann**, Pauline Offeringa***
+# Nebojsa Dubocanin*, Jan Eric Bühlmann**, Pauline Offeringa***
 # *Dept. of Civil, Environmental and Geomatic Engineering, ETH Zürich, dunebojs@student.ethz.ch
 # **Dept. of Business, Economics and Informatics, UZH Zürich, janeric.buehlmann@uzh.ch
 # ***Dept. of Materials Sciences, ETH Zürich, paulineo@student.ethz.ch
 # June 18, 2019
 
 ## Loading necessary libraries (libraries suggested by the professor Stefan Feuerriegel)
-for(i in c(1:1)){
-  library(knitr)
-  library(tidyverse)
-  library(caret)
-  library(e1071)
-  library(ggplot2)
-  library(forcats)
-  library(dplyr)
-  library(lmtest)
-  library(car)
-  library(pROC)
-  library(arules)
-  library(arulesViz)
-  library(ElemStatLearn)
-  library(ISLR)
-  library(glmnet)
-  library(gam)
-  library(class)
-  library(nnet)
-  library(rpart)
-  library(party)
-  library(partykit)
-  library(randomForest)
-  library(ROCR)
-  library(boot)
-  library(bayesboot)
-  library(mboost)
-  library(ada)
-  library(MDPtoolbox)
-  library(tm)
-  library(SnowballC)
-  library(ggmap)
-  library(plyr)
-  library(ggthemes)
-  library(reshape)
-  library(nycflights13)
-  library(kohonen)
-  library(corrplot)
-  library(tidyr)
-}
+library(randomForest)
+
 
 ## Defining the working directory
-setwd("C:/Users/nebapy/Desktop/ETHZ/2_Semester/06_Business_Analytics/PROJECT/Data")
+setwd("C:/melbourne/Data")
 
 ## Loading "Melbourne Housing Dataset"
 df <- read.csv("clean_dataframe.csv")
@@ -119,15 +81,15 @@ p +  geom_point(aes(y = predict_prices, colour = "Predicted Prices"), size = 1) 
                        breaks = c("Predicted Prices", "Test Prices"),
                        values = c("#f937fc", "#378cfc")) +
      coord_cartesian(xlim=c(0, 5240), ylim=c(2*10^5, 10*10^6)) +
-     labs(y="Test vs Predicted Prices [$]", x="Point [-]") +
+     labs(y="Test vs Predicted Prices (Mil. $)", x="Point (-)") +
      scale_x_continuous(breaks = seq(from = 0, to = 5240, by = 1000)) +
-     theme_bw(base_size = 14, base_family = "serif") +
+     theme_bw(base_size = 14) +
      theme(legend.position = "bottom",
           legend.title = element_blank(),
           panel.grid.major.x = element_blank(),
-          panel.grid.major.y = element_line(),
+          panel.grid.major.y = element_blank(),
           panel.grid.minor.x = element_blank(),
-          panel.grid.minor.y = element_line(),
+          panel.grid.minor.y = element_blank(),
           # Remove panel background
           panel.background = element_blank(),
           legend.spacing.x = unit(5, "mm"),
@@ -137,3 +99,4 @@ p +  geom_point(aes(y = predict_prices, colour = "Predicted Prices"), size = 1) 
           axis.text.y = element_text(size = 14),
           legend.text = element_text(size = 14))+
       guides(colour = guide_legend(override.aes = list(size=4)))
+ggsave("C:/melbourne/Plots/dt_&_rf/pred_vs_test_rf300.png")
